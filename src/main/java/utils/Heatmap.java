@@ -20,10 +20,19 @@ public class Heatmap {
                 
                 for gaze in root[1]:
                     left_eye = gaze.find('left_eye')
-                    xcoord = left_eye.attrib.get('gaze_point_x')
-                    ycoord = left_eye.attrib.get('gaze_point_y')
-                    x.append(float(xcoord) * width)
-                    y.append(float(ycoord) * height)
+                    right_eye = gaze.find('right_eye')
+                    
+                    left_eye_x = float(left_eye.attrib.get('gaze_point_x'))
+                    left_eye_y = float(left_eye.attrib.get('gaze_point_y'))
+                    
+                    right_eye_x = float(right_eye.attrib.get('gaze_point_x'))
+                    right_eye_y = float(right_eye.attrib.get('gaze_point_y'))
+                    
+                    xcoord = (left_eye_x + right_eye_x) / 2
+                    ycoord = (left_eye_y + right_eye_y) / 2
+                    
+                    x.append(xcoord * width)
+                    y.append(ycoord * height)
                 
                 gcd = math.gcd(width, height)
                 
