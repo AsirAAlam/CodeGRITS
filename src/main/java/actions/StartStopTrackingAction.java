@@ -5,6 +5,7 @@ import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import components.ConfigDialog;
+import components.TimerDialog;
 import entity.Config;
 import org.jetbrains.annotations.NotNull;
 import trackers.EyeTracker;
@@ -112,6 +113,7 @@ public class StartStopTrackingAction extends AnAction {
                     eyeTracker.startTracking(e.getProject());
                 }
                 AddLabelAction.setIsEnabled(true);
+                new TimerDialog().show();
 
             } else {
                 isTracking = false;
