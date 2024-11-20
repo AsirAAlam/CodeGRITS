@@ -46,6 +46,12 @@ public class StartStopTrackingAction extends AnAction {
     Config config = new Config();
 
     /**
+     * This variable is the configuration.
+     */
+    TimerDialog timerDialog;
+
+
+    /**
      * Update the text of the action button.
      *
      * @param e The action event.
@@ -113,7 +119,8 @@ public class StartStopTrackingAction extends AnAction {
                     eyeTracker.startTracking(e.getProject());
                 }
                 AddLabelAction.setIsEnabled(true);
-                new TimerDialog().show();
+                timerDialog = new TimerDialog();
+                timerDialog.show();
 
             } else {
                 isTracking = false;
@@ -127,6 +134,9 @@ public class StartStopTrackingAction extends AnAction {
                     screenRecorder.stopRecording();
                 }
                 eyeTracker = null;
+                // If the timer dialog was not closed manually, close the timer dialog.
+                if (timerDialog != null)
+                    timerDialog.close(0);
             }
         } catch (ParserConfigurationException | TransformerException | IOException | InterruptedException ex) {
             throw new RuntimeException(ex);
