@@ -18,6 +18,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.RelativePathGetter;
 import utils.XMLWriter;
+import utils.Heatmap;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -172,6 +173,12 @@ public class EyeTracker implements Disposable {
         pythonOutputThread.interrupt();
         pythonProcess.destroy();
         XMLWriter.writeToXML(eyeTracking, dataOutputPath + "/eye_tracking.xml");
+
+        try {
+            Heatmap.genHeatmap(pythonInterpreter, dataOutputPath);
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
