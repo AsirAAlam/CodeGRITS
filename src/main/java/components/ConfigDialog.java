@@ -233,6 +233,10 @@ public class ConfigDialog extends DialogWrapper {
         checkBoxes.add(screenRecording);
         checkBoxPanel.add(screenRecording);
 
+        JCheckBox heatmap = new JCheckBox("Heatmap");
+        checkBoxes.add(heatmap);
+        checkBoxPanel.add(heatmap);
+
         iDETracking.setBorder(new EmptyBorder(contentMargin));
         eyeTracking.setBorder(new EmptyBorder(contentMargin));
         screenRecording.setBorder(new EmptyBorder(contentMargin));
