@@ -173,12 +173,6 @@ public class EyeTracker implements Disposable {
         pythonOutputThread.interrupt();
         pythonProcess.destroy();
         XMLWriter.writeToXML(eyeTracking, dataOutputPath + "/eye_tracking.xml");
-
-        try {
-            Heatmap.genHeatmap(pythonInterpreter, dataOutputPath);
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**
