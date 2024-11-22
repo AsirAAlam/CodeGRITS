@@ -12,6 +12,7 @@ import trackers.EyeTracker;
 import trackers.IDETracker;
 import trackers.ScreenRecorder;
 import utils.AvailabilityChecker;
+import utils.Heatmap;
 
 import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
@@ -122,6 +123,10 @@ public class StartStopTrackingAction extends AnAction {
                 ConfigAction.setIsEnabled(true);
                 if (config.getCheckBoxes().get(1) && eyeTracker != null) {
                     eyeTracker.stopTracking();
+
+                    if (config.getCheckBoxes().get(3)) {
+                        Heatmap.genHeatmap(config.getPythonInterpreter(), eyeTracker.getDataOutputPath());
+                    }
                 }
                 if (config.getCheckBoxes().get(2)) {
                     screenRecorder.stopRecording();

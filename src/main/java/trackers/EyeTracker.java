@@ -424,6 +424,10 @@ public class EyeTracker implements Disposable {
         this.dataOutputPath = dataOutputPath;
     }
 
+    public String getDataOutputPath() {
+        return this.dataOutputPath;
+    }
+
     public void setSampleFrequency(double sampleFrequency) {
         this.sampleFrequency = sampleFrequency;
     }
