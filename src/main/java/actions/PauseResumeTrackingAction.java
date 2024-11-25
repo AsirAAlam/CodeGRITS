@@ -2,7 +2,6 @@ package actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import components.TimerDialog;
 import org.jetbrains.annotations.NotNull;
 import trackers.ScreenRecorder;
