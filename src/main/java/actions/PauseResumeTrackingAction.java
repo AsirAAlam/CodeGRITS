@@ -20,15 +20,19 @@ public class PauseResumeTrackingAction extends AnAction {
         return instance;
     }
 
+    public PauseResumeTrackingAction ()
+    {
+        instance = this;
+    }
+
     /**
      * Update the text of the action button. If the tracking is not started, the button is disabled.
      *
      * @param e The action event.
      */
+
     @Override
     public void update(@NotNull AnActionEvent e) {
-        if (instance == null)
-            instance = this;
         if (StartStopTrackingAction.isTracking()) {
             e.getPresentation().setEnabled(true);
             if (StartStopTrackingAction.isPaused()) {
@@ -50,8 +54,6 @@ public class PauseResumeTrackingAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         TimerDialog timerDialog = TimerDialog.getInstance();
-        if (instance == null)
-            instance = this;
         if (StartStopTrackingAction.isPaused()) {
             screenRecorder.resumeRecording();
             StartStopTrackingAction.resumeTracking();
