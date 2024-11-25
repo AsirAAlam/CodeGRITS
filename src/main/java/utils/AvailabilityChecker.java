@@ -17,7 +17,7 @@ public class AvailabilityChecker {
      * @param pythonInterpreter The path of the python interpreter.
      * @return {@code true} if the python environment is available, {@code false} otherwise.
      */
-    public static boolean checkPythonEnvironment(String pythonInterpreter) throws IOException, InterruptedException {
+    public static String checkPythonEnvironment(String pythonInterpreter) throws IOException, InterruptedException {
         String pythonScript = """
                 import tobii_research as tr
                 from screeninfo import get_monitors
@@ -29,8 +29,7 @@ public class AvailabilityChecker {
                 print('OK')
                 """;
 
-        String line = runPythonScript(pythonInterpreter, pythonScript);
-        return line.equals("OK");
+        return runPythonScript(pythonInterpreter, pythonScript, true);
     }
 
     /**
@@ -103,6 +102,10 @@ public class AvailabilityChecker {
      * @return The first line of the output.
      */
     private static String runPythonScript(String pythonInterpreter, String pythonScript) throws IOException, InterruptedException {
+        return runPythonScript(pythonInterpreter, pythonScript, false);
+    }
+
+    private static String runPythonScript(String pythonInterpreter, String pythonScript, boolean getAllLines) throws IOException, InterruptedException {
         ProcessBuilder pb = new ProcessBuilder(pythonInterpreter, "-c", pythonScript);
         pb.redirectErrorStream(true);
         Process p;
@@ -110,8 +113,21 @@ public class AvailabilityChecker {
 
         InputStream stdout = p.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(stdout));
-        String line = reader.readLine();
         p.waitFor();
-        return line;
+
+        String line = reader.readLine();
+
+        if (!getAllLines) {
+            return line;
+        }
+
+        StringBuilder output = new StringBuilder(line);
+
+        while ((line = reader.readLine()) != null) {
+            output.append('\n');
+            output.append(line);
+        }
+
+        return output.toString();
     }
 }

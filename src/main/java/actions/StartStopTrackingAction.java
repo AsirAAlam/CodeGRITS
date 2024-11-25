@@ -79,8 +79,10 @@ public class StartStopTrackingAction extends AnAction {
         try {
             if (!isTracking) {
                 if (config.getCheckBoxes().get(1)) {
-                    if (!AvailabilityChecker.checkPythonEnvironment(config.getPythonInterpreter())) {
-                        JOptionPane.showMessageDialog(null, "Python interpreter not found. Please configure the plugin first.");
+                    String pythonEnvironmentStatus = AvailabilityChecker.checkPythonEnvironment(config.getPythonInterpreter());
+
+                    if (!pythonEnvironmentStatus.equals("OK")) {
+                        JOptionPane.showMessageDialog(null, "Error verifying python environment:\n\n" + pythonEnvironmentStatus);
                         return;
                     }
                     if (config.getEyeTrackerDevice() != 0 && !AvailabilityChecker.checkEyeTracker(config.getPythonInterpreter())) {
