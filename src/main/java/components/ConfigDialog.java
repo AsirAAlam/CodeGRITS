@@ -41,7 +41,7 @@ public class ConfigDialog extends DialogWrapper {
     private final JComboBox<Double> freqCombo = new ComboBox<>();
     private final JComboBox<String> deviceCombo = new ComboBox<>(new String[]{"Mouse"});
 
-    private boolean pythonEnvironment = false;
+    private String pythonEnvironment = "not configured";
     private boolean eyeTracker = false;
 
     public static String selectDataOutputPlaceHolder = "Select Data Output Folder (Default: Project Root)";
@@ -68,10 +68,10 @@ public class ConfigDialog extends DialogWrapper {
             }
             pythonInterpreterTextField.setText(config.getPythonInterpreter());
         }
-        if (getPythonInterpreter().equals(selectPythonInterpreterPlaceHolder) || getPythonInterpreter().equals("python") || getPythonInterpreter().equals("python3") || getPythonInterpreter().equals("") || getPythonInterpreter().endsWith("python") || getPythonInterpreter().endsWith("python3") || getPythonInterpreter().endsWith("python.exe") || getPythonInterpreter().endsWith("python3.exe")) {
+        if (getPythonInterpreter().equals(selectPythonInterpreterPlaceHolder) || getPythonInterpreter().equals("python") || getPythonInterpreter().equals("python3") || getPythonInterpreter().isEmpty() || getPythonInterpreter().endsWith("python") || getPythonInterpreter().endsWith("python3") || getPythonInterpreter().endsWith("python.exe") || getPythonInterpreter().endsWith("python3.exe")) {
 
             pythonEnvironment = AvailabilityChecker.checkPythonEnvironment(getPythonInterpreter());
-            if (pythonEnvironment && checkBoxes.get(1).isSelected()) {
+            if (pythonEnvironment.equals("OK") && checkBoxes.get(1).isSelected()) {
                 eyeTracker = AvailabilityChecker.checkEyeTracker(getPythonInterpreter());
                 if (eyeTracker) { //eye tracker found, add mouse and eye tracker name, add eye tracker freq
                     String trackerName = AvailabilityChecker.getEyeTrackerName(getPythonInterpreter());
@@ -263,33 +263,37 @@ public class ConfigDialog extends DialogWrapper {
                 new DocumentAdapter() {
                     @Override
                     protected void textChanged(@NotNull DocumentEvent e) {
-                        try {
-                            //TODO: what if using mac/unix/anaconda
-                            if (getPythonInterpreter().equals("python") || getPythonInterpreter().equals("python3") || getPythonInterpreter().equals("") || getPythonInterpreter().endsWith("python") || getPythonInterpreter().endsWith("python3") || getPythonInterpreter().endsWith("python.exe") || getPythonInterpreter().endsWith("python3.exe")) {
-                                pythonEnvironment = AvailabilityChecker.checkPythonEnvironment(getPythonInterpreter());
-                            } else {
-                                pythonEnvironment = false;
-                            }
-                            ComponentValidator.getInstance(pythonInterpreterTextField.getTextField()).ifPresent(ComponentValidator::revalidate);
-                        } catch (IOException | InterruptedException ex) {
-                            throw new RuntimeException(ex);
-                        }
+                        ComponentValidator.getInstance(pythonInterpreterTextField.getTextField()).ifPresent(ComponentValidator::revalidate);
                     }
                 }
         );
-        //add validator for python interpreter
+        //add validator for python interpreterS
         new ComponentValidator(getDisposable()).withValidator(() -> {
             String text = pythonInterpreterTextField.getText();
-            if (!pythonEnvironment) {
-                return new ValidationInfo("Python environment not configured.", pythonInterpreterTextField.getTextField());
-            } else {
-                File file = new File(text);
-                if (!file.exists()) {
-                    return new ValidationInfo("Python interpreter not found", pythonInterpreterTextField.getTextField());
-                } else {
-                    return null;
-                }
+            pythonEnvironment = "not configured";
+
+            //TODO: what if using mac/unix/anaconda
+            if (!getPythonInterpreter().equals("python") && !getPythonInterpreter().equals("python3") && !getPythonInterpreter().isEmpty() && !getPythonInterpreter().endsWith("python") && !getPythonInterpreter().endsWith("python3") && !getPythonInterpreter().endsWith("python.exe") && !getPythonInterpreter().endsWith("python3.exe")) {
+                return new ValidationInfo("Please select a path to a Python interpreter", pythonInterpreterTextField.getTextField());
             }
+
+            File file = new File(text);
+            if (!file.isFile()) {
+                return new ValidationInfo("Python interpreter not found at the selected path", pythonInterpreterTextField.getTextField());
+            }
+
+            try {
+                pythonEnvironment = AvailabilityChecker.checkPythonEnvironment(getPythonInterpreter());
+            } catch (IOException | InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            if (!pythonEnvironment.equals("OK")) {
+                String errorMsg = "Error verifying python environment:\n\n" + pythonEnvironment;
+                return new ValidationInfo(errorMsg, pythonInterpreterTextField.getTextField());
+            }
+
+            return null;
         }).installOn(pythonInterpreterTextField.getTextField());
 
         panel.add(pythonInterpreterTextField);
@@ -354,16 +358,17 @@ public class ConfigDialog extends DialogWrapper {
         panel.add(labelAreaPanel);
 
         eyeTracking.addActionListener(actionEvent -> {
-            if (!pythonEnvironment) {
+            if (!pythonEnvironment.equals("OK")) {
                 eyeTracking.setSelected(false);
-                new AlertDialog("Python environment not configured.", AllIcons.General.BalloonWarning).show();
+                String errorMsg = "Error verifying python environment:\n\n" + pythonEnvironment;
+                new AlertDialog(errorMsg, AllIcons.General.BalloonWarning).show();
                 return;
             }
             if (!eyeTracking.isSelected()) {
                 freqCombo.setEnabled(false);
                 deviceCombo.setEnabled(false);
             }
-            if (eyeTracking.isSelected() && pythonEnvironment) {
+            if (eyeTracking.isSelected() && pythonEnvironment.equals("OK")) {
                 deviceCombo.setEnabled(true);
                 try {
                     eyeTracker = AvailabilityChecker.checkEyeTracker(getPythonInterpreter());
