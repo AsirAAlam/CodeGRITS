@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="14bb91d1-ebd0-4f11-b77e-711543adf329" name="Changes" comment="refresh">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/actions/PauseResumeTrackingAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/actions/PauseResumeTrackingAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/actions/StartStopTrackingAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/actions/StartStopTrackingAction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/components/TimerDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/components/TimerDialog.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -153,6 +155,7 @@
     <attachedChunks>
       <set>
         <option value="jdk-17.0.10-corretto-17.0.10-4caba194b151-5cd809f4" />
+        <option value="jdk-20.0.2-azul-20.0.2-4caba194b151-eb49e076" />
       </set>
     </attachedChunks>
   </component>

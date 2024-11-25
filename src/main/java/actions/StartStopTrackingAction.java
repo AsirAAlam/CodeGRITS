@@ -50,7 +50,6 @@ public class StartStopTrackingAction extends AnAction {
      */
     TimerDialog timerDialog;
 
-
     /**
      * Update the text of the action button.
      *
@@ -119,7 +118,7 @@ public class StartStopTrackingAction extends AnAction {
                     eyeTracker.startTracking(e.getProject());
                 }
                 AddLabelAction.setIsEnabled(true);
-                timerDialog = new TimerDialog();
+                timerDialog = new TimerDialog(this);
                 timerDialog.show();
 
             } else {
